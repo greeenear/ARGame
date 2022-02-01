@@ -23,18 +23,17 @@ public class Controller : MonoBehaviour {
     private int enemyCount;
     private float timer;
 
-
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     void Update() {
         timer += Time.deltaTime;
 
-        var xСoordinates = UnityEngine.Random.Range(0, Screen.width);
-        var yСoordinates = UnityEngine.Random.Range(0, Screen.height);
-        var screenCenter = new Vector2(xСoordinates, yСoordinates);
-        raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
+        var xRandСoordinates = UnityEngine.Random.Range(0, Screen.width);
+        var yRandСoordinates = UnityEngine.Random.Range(0, Screen.height);
+        var screenCenter = new Vector2(xRandСoordinates, yRandСoordinates);
 
-        if (hits.Count > 0 && timer > 1) {
+        raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
+        if (hits.Count > 0 && timer > 3) {
             var type = (ObjectType)UnityEngine.Random.Range(0, (int)ObjectType.Count);
             ShowObjectOnPlane(objectPooling.GetObject(type), hits[0].pose);
             timer = 0;
@@ -49,8 +48,7 @@ public class Controller : MonoBehaviour {
         var touchRaycast = Physics.Raycast(screenPoint, out RaycastHit hit, 10f, enemyLayer);
         if (hit.transform.gameObject != null) {
             hit.transform.gameObject.SetActive(false);
-            onKill.Invoke((enemyCount + 1).ToString());
-            enemyCount++;
+            onKill.Invoke((enemyCount++).ToString());
         }
     }
 
