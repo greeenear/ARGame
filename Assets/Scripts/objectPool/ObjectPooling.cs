@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ObjectType {
-    Cube,
-    Sphere,
+    Turtle,
+    Slime,
     Count
 }
 
@@ -18,6 +19,8 @@ public class ObjectPooling : MonoBehaviour {
     private GameObject[] prefabs;
     private List<ObjectInfo> objects = new List<ObjectInfo>();
 
+    public Text text;
+
     public GameObject GetObject(ObjectType type) {
         if (objects == null) {
             Debug.LogError("GetObject: objects is null");
@@ -29,7 +32,6 @@ public class ObjectPooling : MonoBehaviour {
                 return obj.prefab;
             }
         }
-
         return AddObject(type).prefab;
     }
 

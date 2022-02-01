@@ -8,25 +8,33 @@ using UnityEngine.XR.ARSubsystems;
 using UnityEngine.UI;
 
 public class Controller : MonoBehaviour {
+    public Action<string> onKill;
+
     [SerializeField]
     private ARRaycastManager raycastManager;
     [SerializeField]
     private ObjectPooling objectPooling;
-    public Action onKill;
-
-    private float timer;
 
     [SerializeField]
-    private Text text;
+    private Camera mainCamera;
+
+    public LayerMask enemyLayer;
+
+    private int enemyCount;
+    private float timer;
+
 
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     void Update() {
         timer += Time.deltaTime;
-        var screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
+
+        var xСoordinates = UnityEngine.Random.Range(0, Screen.width);
+        var yСoordinates = UnityEngine.Random.Range(0, Screen.height);
+        var screenCenter = new Vector2(xСoordinates, yСoordinates);
         raycastManager.Raycast(screenCenter, hits, TrackableType.Planes);
 
-        if (hits.Count > 0 && timer > 2) {
+        if (hits.Count > 0 && timer > 1) {
             var type = (ObjectType)UnityEngine.Random.Range(0, (int)ObjectType.Count);
             ShowObjectOnPlane(objectPooling.GetObject(type), hits[0].pose);
             timer = 0;
@@ -36,11 +44,13 @@ public class Controller : MonoBehaviour {
         Touch touch;
         if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began) return;
 
-        var screenPoint = Camera.main.ScreenPointToRay(touch.position);
-        var touchRaycast = Physics.Raycast(screenPoint, out RaycastHit hit);
 
+        var screenPoint = mainCamera.ScreenPointToRay(touch.position);
+        var touchRaycast = Physics.Raycast(screenPoint, out RaycastHit hit, 10f, enemyLayer);
         if (hit.transform.gameObject != null) {
-            text.text += 1;
+            hit.transform.gameObject.SetActive(false);
+            onKill.Invoke((enemyCount + 1).ToString());
+            enemyCount++;
         }
     }
 
