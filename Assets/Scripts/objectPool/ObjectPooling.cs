@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum ObjectType {
     Turtle,
@@ -18,8 +16,6 @@ public class ObjectPooling : MonoBehaviour {
     [SerializeField]
     private GameObject[] prefabs;
     private List<ObjectInfo> objects = new List<ObjectInfo>();
-
-    public Text text;
 
     public GameObject GetObject(ObjectType type) {
         if (objects == null) {
