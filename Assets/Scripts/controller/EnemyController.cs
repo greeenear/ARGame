@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum State {
     Idle,
-    Die
+    Die,
+    Block
 }
 
 public class EnemyController : MonoBehaviour {
@@ -24,10 +23,15 @@ public class EnemyController : MonoBehaviour {
             gameObject.SetActive(false);
         }
     }
+
     public void OnDie() {
         animator.SetBool("isDie", false);
         state = State.Idle;
         gameObject.SetActive(false);
+    }
+
+    public void OnBlock() {
+        state = State.Block;
     }
 
     public void OnHit() {

@@ -56,9 +56,15 @@ public class Controller : MonoBehaviour {
         var screenPoint = mainCamera.ScreenPointToRay(touch.position);
         if (Physics.Raycast(screenPoint, out RaycastHit hit, 10f, enemyLayer)) {
             if (!hit.transform.gameObject.TryGetComponent(out Animator animator)) return;
-
+            if (!hit.transform.gameObject.TryGetComponent(out EnemyController enemy)) return;
+            if (enemy.state == State.Die) return;
+            // не state die
+            // не state block
+            // добавить загрузку сцен
+            // если state block - снять очки но не в минус (clamp)
             onChangeScore.Invoke((enemyCount++ + 1).ToString());
-            animator.SetBool("isDie", true);
+            enemy.animator.SetBool("isDie", true);
+            //animator.SetBool("isDie", true);
         }
     }
 
