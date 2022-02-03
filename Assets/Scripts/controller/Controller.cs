@@ -59,7 +59,7 @@ public class Controller : MonoBehaviour {
             if (enemy.state == State.Die) return;
 
             if (enemy.state == State.Block) {
-                enemyCount = Mathf.Clamp((enemyCount - 1), 0, int.MaxValue);
+                enemyCount = Mathf.Clamp((enemyCount - 2), 0, int.MaxValue);
                 onChangeScore.Invoke(enemyCount.ToString());
                 return;
             }
