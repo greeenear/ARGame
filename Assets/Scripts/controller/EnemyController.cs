@@ -8,6 +8,7 @@ public enum State {
 
 public class EnemyController : MonoBehaviour {
     private float timer;
+    public ObjectType type;
     public State state;
     public Animator animator;
 
@@ -18,6 +19,10 @@ public class EnemyController : MonoBehaviour {
 
     private void Update() {
         if (state != State.Die) timer += Time.deltaTime;
+        if (Random.Range(0, 100) > 95 && state != State.Block && type == ObjectType.Turtle) {
+            state = State.Block;
+            animator.SetTrigger("isBlock");
+        }
 
         if (timer > 1) {
             gameObject.SetActive(false);
@@ -28,10 +33,6 @@ public class EnemyController : MonoBehaviour {
         animator.SetBool("isDie", false);
         state = State.Idle;
         gameObject.SetActive(false);
-    }
-
-    public void OnBlock() {
-        state = State.Block;
     }
 
     public void OnHit() {

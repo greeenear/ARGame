@@ -10,7 +10,6 @@ using UnityEngine.Events;
 
 public class Controller : MonoBehaviour {
     public Action<string> onChangeScore;
-    public UnityEvent onGameOver;
 
     [SerializeField]
     private ARRaycastManager raycastManager;
@@ -19,8 +18,11 @@ public class Controller : MonoBehaviour {
 
     [SerializeField]
     private Camera mainCamera;
+    [SerializeField]
+    private LayerMask enemyLayer;
 
-    public LayerMask enemyLayer;
+    [SerializeField]
+    private SceneLoader loader;
 
     private int enemyCount;
     private float spawnTimer;
@@ -33,9 +35,7 @@ public class Controller : MonoBehaviour {
         spawnTimer += Time.deltaTime;
 
         if (gameTimer > 60) {
-            onGameOver.Invoke();
-            onChangeScore.Invoke((enemyCount++).ToString());
-            this.enabled = false;
+            loader.Load("MainMenu");
         }
 
         var xRandСoordinates = UnityEngine.Random.Range(0, Screen.width);
@@ -55,16 +55,17 @@ public class Controller : MonoBehaviour {
 
         var screenPoint = mainCamera.ScreenPointToRay(touch.position);
         if (Physics.Raycast(screenPoint, out RaycastHit hit, 10f, enemyLayer)) {
-            if (!hit.transform.gameObject.TryGetComponent(out Animator animator)) return;
             if (!hit.transform.gameObject.TryGetComponent(out EnemyController enemy)) return;
             if (enemy.state == State.Die) return;
-            // не state die
-            // не state block
-            // добавить загрузку сцен
-            // если state block - снять очки но не в минус (clamp)
+
+            if (enemy.state == State.Block) {
+                enemyCount = Mathf.Clamp((enemyCount - 1), 0, int.MaxValue);
+                onChangeScore.Invoke(enemyCount.ToString());
+                return;
+            }
+
             onChangeScore.Invoke((enemyCount++ + 1).ToString());
             enemy.animator.SetBool("isDie", true);
-            //animator.SetBool("isDie", true);
         }
     }
 
