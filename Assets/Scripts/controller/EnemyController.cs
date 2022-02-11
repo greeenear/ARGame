@@ -19,10 +19,6 @@ public class EnemyController : MonoBehaviour {
 
     private void Update() {
         if (state != State.Die) timer += Time.deltaTime;
-        if (Random.Range(0, 100) > 95 && state != State.Block && type == ObjectType.Turtle) {
-            state = State.Block;
-            animator.SetTrigger("isBlock");
-        }
 
         if (timer > 1) {
             gameObject.SetActive(false);

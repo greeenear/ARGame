@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum ObjectType {
-    Turtle,
-    Slime,
+    Point,
     Count
 }
 
